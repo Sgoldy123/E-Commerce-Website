@@ -1,0 +1,12 @@
+import express from 'express'
+const router=express.Router();
+import {getProductById,getProducts,deleteProduct,createProduct,updateProduct,updateProductReviews} from '../controller/productController.js'
+import {protect,admin} from '../middleware/authMiddleware.js'
+
+
+router.route('/').get(getProducts).post(protect,admin,createProduct);        //router.get('/',asyncHandler(async (req,res)
+router.route('/:id/reviews').post(protect,updateProductReviews);  
+router.route('/:id').get(getProductById).delete(protect,admin,deleteProduct).put(protect,admin,updateProduct);   // same as == >>   router.get('/', (req,res)=>{ ****  })
+
+
+export default router;
