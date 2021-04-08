@@ -25,7 +25,7 @@ connectDb();
 
 //middleware
 
-if(process.env.NODE_X==='Development'){
+if(process.env.NODE_ENV==='development'){
     app.use(morgan('dev'))
 }
 app.use(cors());
@@ -33,9 +33,9 @@ app.use(express.json());
 
 
 //routes
-app.get('/',(req,res)=>{
-    res.send('checking Server')
-})
+// app.get('/',(req,res)=>{
+//     res.send('checking Server')
+// })
 
 app.use('/api/products',productRoutes);
 app.use('/api/users',userRoutes);
@@ -45,18 +45,30 @@ app.use('/api/upload',uploadRoutes);
 app.get('/api/config/paypal',(req,res)=>res.send(process.env.PAYPAL_CLIENT_ID));
 
 
-const __dirname=path.resolve()
-app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
+// deploying on server**
 
-app.use(notFound);
+const __dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
-app.use(errorHandler);
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  )
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...')
+  })
+}
+
+app.use(notFound)
+app.use(errorHandler)
 
 
 
 
 
 //server
-const PORT=process.env.PORT;
+const PORT=process.env.PORT||5000;
 const develop=process.env.NODE_X;
 app.listen('5000',()=>console.log(`server ${develop} is running at  ${PORT}`.cyan.underline));
