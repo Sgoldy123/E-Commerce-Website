@@ -70,5 +70,5 @@ app.use(errorHandler)
 
 //server
 const PORT=process.env.PORT||5000;
-const develop=process.env.NODE_ENV;
-app.listen('5000',()=>console.log(`server ${develop} is running at  ${PORT}`.cyan.underline));
+// const develop=process.env.NODE_ENV;
+app.listen('5000',()=>console.log(`server ho ja pls is running at  ${PORT}`.cyan.underline));
